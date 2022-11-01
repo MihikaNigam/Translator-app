@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:translator/translator.dart';
 import 'package:translatorApp/list.dart' as ls;
@@ -43,7 +43,7 @@ var key;
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    var text = "";
+    String text = "";
     var output;
     String _retrieveDataError;
     dynamic _pickImageError;
@@ -71,7 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Card(
                   elevation: 10,
                   child: Container(
-                    width: MediaQuery.of(context).size.width*0.75,
+                    margin: EdgeInsets.only(top: 10),
+                    width: MediaQuery.of(context).size.width * 0.75,
                     child: Flex(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
-                        FlatButton(
+                        TextButton(
                             child: Text("OK", style: TextStyle(fontSize: 20)),
                             onPressed: () {
                               Navigator.of(ctx).pop();
@@ -100,9 +101,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     textExtracting(File img) async {
       print('inside textExtracting func');
-      FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(img);
-      TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
-      VisionText visionText = await textRecognizer.processImage(
+      final visionImage = InputImage.fromFile(img);
+      final textRecognizer = TextRecognizer();
+      final RecognizedText visionText = await textRecognizer.processImage(
           visionImage); //this object contains full text  and text blocks
       for (TextBlock block in visionText.blocks) {
         for (TextLine line in block.lines) {
@@ -112,10 +113,27 @@ class _MyHomePageState extends State<MyHomePage> {
             });
           }
           text = text + '\n';
+          print(text);
         }
+        textRecognizer.close();
+        return text;
       }
-      textRecognizer.close();
-      return text;
+      // FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(img);
+      // TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
+      // VisionText visionText = await textRecognizer.processImage(
+      //     visionImage); //this object contains full text  and text blocks
+      // for (TextBlock block in visionText.blocks) {
+      //   for (TextLine line in block.lines) {
+      //     for (TextElement word in line.elements) {
+      //       setState(() {
+      //         text += word.text + ' ';
+      //       });
+      //     }
+      //     text = text + '\n';
+      //   }
+      // }
+      // textRecognizer.close();
+      // return text;
     }
 
     imagegetter(String mode) async {
@@ -145,13 +163,15 @@ class _MyHomePageState extends State<MyHomePage> {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          RaisedButton(
-              textColor: Colors.white,
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
               child: Text('Choose From Gallery'),
-              color: Theme.of(context).accentColor,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
               onPressed: () {
                 if (key == null) {
                   return showDialog(
@@ -159,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       builder: (ctx) => AlertDialog(
                             title: Text('Please select a language first'),
                             actions: [
-                              FlatButton(
+                              TextButton(
                                   child: Text("OK"),
                                   onPressed: () {
                                     Navigator.of(ctx).pop();
@@ -173,13 +193,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               }),
           SizedBox(height: 20),
-          RaisedButton(
-              textColor: Colors.white,
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
               child: Text('Scan The Text'),
-              color: Theme.of(context).accentColor,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
               onPressed: () {
                 if (key == null) {
                   return showDialog(
@@ -187,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       builder: (ctx) => AlertDialog(
                             title: Text('Please select a language first'),
                             actions: [
-                              FlatButton(
+                              TextButton(
                                   child: Text("OK"),
                                   onPressed: () {
                                     Navigator.of(ctx).pop();

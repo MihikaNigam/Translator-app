@@ -23,9 +23,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  translator: ^0.1.5
-  image_picker: ^0.6.7+7
-  firebase_ml_vision: ^0.9.6+2
+  translator: ^0.1.7
+  image_picker: ^0.8.6
+  # firebase_ml_vision: ^0.9.6+2
+  google_mlkit_text_recognition: ^0.4.0
 
 
   # The following adds the Cupertino Icons font to your application.
